@@ -1,4 +1,5 @@
 import { fireEvent, render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import App from './App';
 
 describe('TEST APP', () => {
@@ -29,5 +30,20 @@ describe('TEST APP', () => {
         expect(screen.queryByTestId('toggle-elem')).toBeNull();
         fireEvent.click(btn);
         expect(screen.queryByTestId('toggle-elem')).toBeInTheDocument();
+        fireEvent.click(btn);
+        expect(screen.queryByTestId('toggle-elem')).toBeNull();
+      });
+
+      test('input test', async () => {
+        render(<App />);
+        const input = screen.getByPlaceholderText(/input value/i);
+        expect(screen.queryByTestId('value-elem')).toContainHTML('');
+        // fireEvent искуственное событие
+        // fireEvent.input(input, {
+        //     target: { value:'123123' }
+        // })
+        // userEvent работает с событиями пользователя
+        userEvent.type(input, '123123')
+        expect(screen.queryByTestId('value-elem')).toContainHTML('123123');
       });
 })
